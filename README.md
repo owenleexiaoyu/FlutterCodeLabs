@@ -1,2 +1,2 @@
-# flutter_codelabs
+# FlutterCodeLabs
 Some flutter practice projects
