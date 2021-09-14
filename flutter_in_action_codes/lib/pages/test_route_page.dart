@@ -26,42 +26,6 @@ class TestRoutePage extends StatelessWidget {
               child: Text("Open new route"),
               textColor: Colors.blue,
             ),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return CupertinoTestRoute();
-                }));
-              },
-              child: Text("Open cupertino test route"),
-              textColor: Colors.yellow,
-            ),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return TapBoxA();
-                }));
-              },
-              child: Text("Open TapBoxA route"),
-              textColor: Colors.red,
-            ),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ParentWidget();
-                }));
-              },
-              child: Text("Open TapBoxB route"),
-              textColor: Colors.red,
-            ),
-            FlatButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return ParentWidgetC();
-                }));
-              },
-              child: Text("Open TapBoxC route"),
-              textColor: Colors.red,
-            ),
             RandomWordWidget(),
           ],
         ),

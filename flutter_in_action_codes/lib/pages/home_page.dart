@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/custom_widgets/home_item.dart';
+import 'package:flutter_app/pages/basic_widgets_page.dart';
 import 'package:flutter_app/pages/default_counter_demo.dart';
+import 'package:flutter_app/pages/manage_state_page.dart';
+import 'package:flutter_app/pages/test_cupertino_style_page.dart';
 import 'package:flutter_app/pages/test_get_state_by_context.dart';
 import 'package:flutter_app/pages/test_get_state_by_globalkey.dart';
 import 'package:flutter_app/pages/test_route_page.dart';
 import 'package:flutter_app/pages/test_state_lifecycle_page.dart';
-import 'package:flutter_app/widgets_button_demo.dart';
-import 'package:flutter_app/widgets_checkbox_switch.dart';
-import 'package:flutter_app/widgets_image_demo.dart';
-
-import '../widgets_indicator_demo.dart';
-import '../widgets_text_demo.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -23,85 +21,67 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return DefaultCounterPage(title: "计数器");
-                  }));
-                },
-                child: Text("默认生成的计数器Demo"),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TestRoutePage(title: "测试一些页面跳转");
-                  }));
-                },
-                child: Text("测试一些页面跳转"),
-              ),
-              OutlinedButton(
+              HomeItem(
+                  title: "默认生成的计数器Demo",
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return DefaultCounterPage(title: "计数器");
+                    }));
+                  }),
+              HomeItem(
+                  title: "测试一些页面跳转",
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return TestRoutePage(title: "测试一些页面跳转");
+                    }));
+                  }),
+              HomeItem(
+                title: "State 声明周期",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return CounterWidget();
                   }));
-                },
-                child: Text("State 声明周期"),
-              ),
-              OutlinedButton(
+                }),
+              HomeItem(
+                title: "通过 context 获取 State",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return GetStateByContextPage();
                   }));
-                },
-                child: Text("通过 context 获取 State"),
-              ),
-              OutlinedButton(
+                },),
+              HomeItem(
+                title: "通过 GlobalKey 获取 State",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return GetStateByGlobalKeyPage();
                   }));
                 },
-                child: Text("通过 GlobalKey 获取 State"),
               ),
-              OutlinedButton(
+              HomeItem(
+                title: "Cupertino 风格的组件",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TextDemoPage();
+                    return CupertinoTestPage();
                   }));
                 },
-                child: Text("Text Widget Demo"),
               ),
-              OutlinedButton(
+              HomeItem(
+                title: "StatefulWidget 状态管理",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ButtonDemoPage();
+                    return ManageStatePage();
                   }));
                 },
-                child: Text("Button Widget Demo"),
               ),
-              OutlinedButton(
+              HomeItem(
+                title: "基础 Widget 示例",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ImageDemoPage();
+                    return BasicWidgetsPage();
                   }));
                 },
-                child: Text("Image Widget Demo"),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SwitchAndCheckBoxDemoPage();
-                  }));
-                },
-                child: Text("Switch and Checkbox Widget Demo"),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return IndicatorDemoPage();
-                  }));
-                },
-                child: Text("Indicator Widget Demo"),
               ),
             ],
           ),
