@@ -1,7 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:video_player_app/colors.dart';
 
-class VideoInfoPage extends StatelessWidget {
+class VideoInfoPage extends StatefulWidget {
+  @override
+  _VideoInfoPageState createState() => _VideoInfoPageState();
+}
+
+class _VideoInfoPageState extends State<VideoInfoPage> {
+
+  List videoInfos = [];
+
+  @override
+  void initState() {
+    DefaultAssetBundle.of(context).loadString("json/videoinfo.json").then((value) {
+      setState(() {
+        videoInfos = json.decode(value);
+      });
+      debugPrint(videoInfos.toString());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +137,61 @@ class VideoInfoPage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 30,),
-                    
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: videoInfos.length,
+                          itemBuilder: (_, index) {
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 70,
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: AssetImage(videoInfos[index]["thumbnail"]),
+                                          fit: BoxFit.cover
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 6,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(videoInfos[index]["title"], style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),),
+                                        SizedBox(height: 10,),
+                                        Text(videoInfos[index]["time"], style: TextStyle(
+                                          color: AppColor.setsColor,
+                                        ),),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 10,),
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: AppColor.gradientSecond,
+                                      ),
+                                      child: Text(
+                                        "15s rest"
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            );
+                          }),
+                    ),
+
                   ],
                 ),
               )),
