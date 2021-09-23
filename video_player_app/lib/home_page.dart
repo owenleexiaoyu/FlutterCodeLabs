@@ -207,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                     height: 120,
                     margin: const EdgeInsets.only(top: 30),
                     decoration: BoxDecoration(
-                        color: Colors.orange,
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
                           image: AssetImage("assets/card.jpg"),
