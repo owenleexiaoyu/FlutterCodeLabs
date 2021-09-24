@@ -12,8 +12,8 @@ class DescItem extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(4),
-      margin: EdgeInsets.symmetric(vertical: 4),
-      color: Colors.orange,
+      margin: EdgeInsets.symmetric(vertical: 6),
+      color: Colors.black45,
       child: Row(
         children: [
           Icon(Icons.arrow_right, color: Colors.white,),

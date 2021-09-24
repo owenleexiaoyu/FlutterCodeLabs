@@ -38,38 +38,102 @@ class TextDemoPage extends StatelessWidget {
               DescItem("文字缩放系数（1.5）"),
               Text(
                 "Hello world",
-                textScaleFactor: 1.5,
+                textScaleFactor: MediaQuery.textScaleFactorOf(context),
               ),
               DescItem("文字方向（TextDirection.ltr, TextDirection.rtl）"),
               Text(
-                "这是一个普通的文本.",
+                "LTR方向(注意标点在右边).",
+                textDirection: TextDirection.ltr,
+              ),
+              Text(
+                "RTL方向(注意标点在左边).",
                 textDirection: TextDirection.rtl,
               ),
               DescItem("TextStyle 各种属性"),
               Text(
-                "这是一个普通的文本.",
+                "这是一个设置了颜色、大小、行高、字体、背景的文本",
                 style: TextStyle(
                   color: Colors.teal,
-                  fontSize: 18,
-                  height: 1.2,
+                  fontSize: 20,
+                  height: 1.5,
                   fontFamily: "Courier",
                   background: Paint()..color = Colors.yellow,
-                  decoration: TextDecoration.underline,
-                  decorationStyle: TextDecorationStyle.dashed,
                 ),
               ),
-              DescItem("Text.rich & TextSpan 多个样式组合"),
-              Text.rich(TextSpan(children: [
-                TextSpan(
-                  text: "Link: ",
-                ),
-                TextSpan(
-                  text: "https://lixiaoyu.cc",
-                  style: TextStyle(
-                    color: Colors.blue,
+              DescItem("TextDecoration 各种值的效果"),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "TextDecoration.none", style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.green,
+                    decoration: TextDecoration.none,
                   ),
-                )
-              ])),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    "TextDecoration.underline", style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.yellow,
+                    decoration: TextDecoration.underline,
+                  ),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    "TextDecoration.lineThrough", style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.redAccent,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    "TextDecoration.overline", style: TextStyle(
+                    fontSize: 28,
+                    decoration: TextDecoration.overline,
+                  ),
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    "TextDecoration.combine", style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.blue,
+                    decoration: TextDecoration.combine([TextDecoration.lineThrough, TextDecoration.underline,TextDecoration.overline]),
+                  ),
+                  ),
+                ],
+              ),
+              DescItem("TextDecorationStyle 各种值的效果"),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: TextDecorationStyle.values.map((e) {
+                  return Text(
+                    e.toString(), style: TextStyle(
+                      fontSize: 28,
+                      decoration: TextDecoration.underline,
+                      decorationStyle: e,
+                    ),
+                  );
+                }).toList(),
+              ),
+              DescItem("Text.rich & TextSpan 多个样式组合"),
+              Text.rich(TextSpan(
+                  text: "Visit my blog, ",
+                  style: TextStyle(
+                      backgroundColor: Colors.yellow.withOpacity(0.4)),
+                  children: [
+                    TextSpan(
+                      text: "Link: ",
+                    ),
+                    TextSpan(
+                      text: "https://lixiaoyu.cc",
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                      // recognizer: _tapRecognizer,
+                    )
+                  ])),
               DescItem("DefaultTextStyle 及覆盖"),
               DefaultTextStyle(
                   style: TextStyle(
