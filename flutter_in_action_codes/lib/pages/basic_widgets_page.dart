@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
 import 'package:flutter_app/widgets_demo/widgets_button_demo.dart';
 import 'package:flutter_app/widgets_demo/widgets_checkbox_switch.dart';
+import 'package:flutter_app/widgets_demo/widgets_icon_demo.dart';
 import 'package:flutter_app/widgets_demo/widgets_image_demo.dart';
 import 'package:flutter_app/widgets_demo/widgets_text_demo.dart';
 
@@ -39,6 +40,14 @@ class BasicWidgetsPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return ImageDemoPage();
+                }));
+              },
+            ),
+            HomeItem(
+              title: "Icon",
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return IconDemoPage();
                 }));
               },
             ),
