@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/basic_widgets/widgets_text_demo.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
-import 'package:flutter_app/widgets_demo/widgets_button_demo.dart';
-import 'package:flutter_app/widgets_demo/widgets_checkbox_switch.dart';
-import 'package:flutter_app/widgets_demo/widgets_icon_demo.dart';
-import 'package:flutter_app/widgets_demo/widgets_image_demo.dart';
-import 'package:flutter_app/widgets_demo/widgets_text_demo.dart';
+import 'package:flutter_app/basic_widgets/widgets_button_demo.dart';
+import 'package:flutter_app/basic_widgets/widgets_checkbox_switch.dart';
+import 'package:flutter_app/basic_widgets/widgets_icon_demo.dart';
+import 'package:flutter_app/basic_widgets/widgets_image_demo.dart';
 
-import '../widgets_demo/widgets_indicator_demo.dart';
+import '../basic_widgets/widgets_indicator_demo.dart';
 
 class BasicWidgetsPage extends StatelessWidget {
   @override

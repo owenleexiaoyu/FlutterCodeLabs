@@ -17,7 +17,7 @@ class DescItem extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.arrow_right, color: Colors.white,),
-          Text(title, style: TextStyle(color: Colors.white),),
+          Expanded(child: Text(title, style: TextStyle(color: Colors.white),)),
         ],
       ),
     );
