@@ -1,14 +1,20 @@
-# Food Ordering App - Flutter UI
+# Food Ordering App
 
-## [Watch it on YouTube](https://youtu.be/F0ujC60wHwc)
+在 Bilibili 上找到的 Flutter UI 教程：https://www.bilibili.com/video/BV1KA411q7PY ，用来做一下 UI 练习。
 
-**Packages we are using:**
-
-- flutter_svg: [link](https://pub.dev/packages/flutter_svg)
-- smooth_star_rating: [link](https://pub.dev/packages/smooth_star_rating)
-
-We design two pages one is the home page and another one is details page that will help you to design clear interfaces for food delivery app faster and easier.
-
-### Food App Final UI
+效果图：
 
 ![App UI](/ui.png)
+
+源码地址：https://github.com/abuanwar072/Food-Ordering-App
+
+最终自己实现的效果如下：
+
+<img src="https://gitee.com/owenlee233/image_store/raw/master/202109262348018.png" alt="image1" style="zoom:33%;" />
+
+<img src="https://gitee.com/owenlee233/image_store/raw/master/202109262348336.png" alt="image1" style="zoom:33%;" />
+
+用到了两个第三方库：
+
+- [flutter_svg](https://pub.dev/packages/flutter_svg)：用来展示SVG图片
+- [flutter_rating_bar](https://pub.dev/packages/flutter_rating_bar)：用来展示评星的 RatingBar
