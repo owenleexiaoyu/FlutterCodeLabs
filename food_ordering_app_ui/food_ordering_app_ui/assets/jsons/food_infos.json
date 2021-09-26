@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Burger & Beer",
+    "desc": "MacDonald's",
+    "coverPath": "assets/icons/burger_beer.svg"
+  },
+  {
+    "title": "Chinese & Noodles",
+    "desc": "Wendys",
+    "coverPath": "assets/icons/chinese_noodles.svg"
+  },
+  {
+    "title": "Burger & Beer",
+    "desc": "MacDonald's",
+    "coverPath": "assets/icons/burger_beer.svg"
+  },
+  {
+    "title": "Burger & Beer",
+    "desc": "MacDonald's",
+    "coverPath": "assets/icons/burger_beer.svg"
+  }
+]
