@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/custom_widgets/desc_item.dart';
 
 class IndicatorDemoPage extends StatelessWidget {
   @override
@@ -12,34 +13,40 @@ class IndicatorDemoPage extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
+            DescItem("LinearProgressIndicator: value=null，会有个循环动画"),
             LinearProgressIndicator(
               backgroundColor: Colors.grey,
               color: Colors.blue,
               valueColor: AlwaysStoppedAnimation(Colors.yellow),
             ),
+            DescItem("LinearProgressIndicator: value=0.5"),
             LinearProgressIndicator(
               value: 0.5,
               backgroundColor: Colors.grey,
               valueColor: AlwaysStoppedAnimation(Colors.yellow),
             ),
+            DescItem("CircularProgressIndicator: value=null，会有个循环动画"),
             CircularProgressIndicator(
               backgroundColor: Colors.black,
               valueColor: AlwaysStoppedAnimation(Colors.pink),
             ),
+            DescItem("CircularProgressIndicator: value=0.8, strokeWidth=8"),
             CircularProgressIndicator(
               backgroundColor: Colors.black,
               valueColor: AlwaysStoppedAnimation(Colors.pink),
               strokeWidth: 8,
               value: 0.8,
             ),
+            DescItem("通过父容器SizedBox指定LinearProgressIndicator的高度"),
             SizedBox(
-              height: 3,
+              height: 10,
               child: LinearProgressIndicator(
                 backgroundColor: Colors.grey,
                 valueColor: AlwaysStoppedAnimation(Colors.blue),
                 value: 0.5,
               ),
             ),
+            DescItem("通过父容器SizedBox指定CircularProgressIndicator的宽高"),
             SizedBox(
               height: 100,
               width: 100,
@@ -49,6 +56,7 @@ class IndicatorDemoPage extends StatelessWidget {
                 value: 0.5,
               ),
             ),
+            DescItem("当CircularProgressIndicator宽高不一致时，会变成椭圆形"),
             SizedBox(
               height: 50,
               width: 100,
@@ -58,6 +66,7 @@ class IndicatorDemoPage extends StatelessWidget {
                 value: 0.5,
               ),
             ),
+            DescItem("进度条的颜色有个从灰色到蓝色的动画"),
             AnimatedProgressIndicator()
           ],
         ),
@@ -104,18 +113,14 @@ class _AnimatedProgressState extends State<AnimatedProgressIndicator>
     return SingleChildScrollView(
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: LinearProgressIndicator(
-              backgroundColor: Colors.grey[200],
-              valueColor: ColorTween(begin: Colors.grey, end: Colors.blue)
-                  .animate(_animationController),
-              value: _animationController.value,
-            ),
+          LinearProgressIndicator(
+            backgroundColor: Colors.grey[200],
+            valueColor: ColorTween(begin: Colors.grey, end: Colors.blue)
+                .animate(_animationController),
+            value: _animationController.value,
           )
         ],
       ),
     );
   }
-
 }
