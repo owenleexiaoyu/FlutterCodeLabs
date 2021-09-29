@@ -92,6 +92,9 @@ class _TextFieldDemoPageState extends State<TextFieldDemoPage> {
                       fontSize: 16
                     )
                   ),
+                  style: TextStyle(
+                    color: Colors.amber
+                  ),
                   cursorColor: Colors.amber,
                   cursorWidth: 3,
                   cursorRadius: Radius.circular(3),
