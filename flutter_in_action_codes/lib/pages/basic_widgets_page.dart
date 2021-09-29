@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/basic_widgets/widgets_text_demo.dart';
+import 'package:flutter_app/basic_widgets/widgets_textfield_demo.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
 import 'package:flutter_app/basic_widgets/widgets_button_demo.dart';
 import 'package:flutter_app/basic_widgets/widgets_checkbox_switch.dart';
@@ -56,6 +57,14 @@ class BasicWidgetsPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return SwitchAndCheckBoxDemoPage();
+                }));
+              },
+            ),
+            HomeItem(
+              title: "TextField",
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return TextFieldDemoPage();
                 }));
               },
             ),
