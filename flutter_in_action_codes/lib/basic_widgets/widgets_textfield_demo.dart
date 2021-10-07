@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/basic_widgets/widgets_form_demo.dart';
 import 'package:flutter_app/custom_widgets/desc_item.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
 
@@ -99,7 +100,13 @@ class _TextFieldDemoPageState extends State<TextFieldDemoPage> {
                   cursorWidth: 3,
                   cursorRadius: Radius.circular(3),
                 ),
-              )
+              ),
+              DescItem("Form 组件使用示例"),
+              HomeItem(title: "Form", onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return FormDemoPage();
+                }));
+              }),
             ],
           ),
         ),
