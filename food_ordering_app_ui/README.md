@@ -4,7 +4,7 @@
 
 效果图：
 
-![App UI](/ui.png)
+![App UI](https://gitee.com/owenlee233/image_store/raw/master/202109262346484.png)
 
 源码地址：https://github.com/abuanwar072/Food-Ordering-App
 
@@ -12,7 +12,7 @@
 
 <img src="https://gitee.com/owenlee233/image_store/raw/master/202109262348018.png" alt="image1" style="zoom:33%;" />
 
-<img src="https://gitee.com/owenlee233/image_store/raw/master/202109262348336.png" alt="image1" style="zoom:33%;" />
+<img src="https://gitee.com/owenlee233/image_store/raw/master/202110110111842.png" alt="image2" style="zoom:33%;" />
 
 用到了两个第三方库：
 
