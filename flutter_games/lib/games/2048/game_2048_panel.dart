@@ -81,6 +81,7 @@ class _Game2048PanelState extends State<Game2048Panel> {
             j1 = j2;
           }
         }
+        j1++;
       }
       int notZeroCount = 0;
       for (int k = 0;k < 4;k++) {
@@ -113,6 +114,7 @@ class _Game2048PanelState extends State<Game2048Panel> {
             j1 = j2;
           }
         }
+        j1--;
       }
       int notZeroCount = 0;
       for (int k = 3;k >= 0;k--) {
@@ -127,9 +129,71 @@ class _Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  void joinGameMapDataToTop() {}
+  void joinGameMapDataToTop() {
+    for (int j = 0; j < 4; j++) {
+      int i1 = 0;
+      while(i1 < 3) {
+        if (gameMap[i1][j] == 0) {
+          i1++;
+          continue;
+        }
+        for (int i2 = i1+1;i2 < 4; i2++) {
+          if (gameMap[i2][j] == 0) {
+            continue;
+          }
+          if (gameMap[i1][j] == gameMap[i2][j]) {
+            gameMap[i1][j] = 2 * gameMap[i1][j];
+            gameMap[i2][j] = 0;
+            i1 = i2;
+          }
+        }
+        i1++;
+      }
+      int notZeroCount = 0;
+      for (int k = 0;k < 4;k++) {
+        if (gameMap[k][j] != 0) {
+          if (k != notZeroCount) {
+            gameMap[notZeroCount][j] = gameMap[k][j];
+            gameMap[k][j] = 0;
+          }
+          notZeroCount++;
+        }
+      }
+    }
+  }
 
-  void joinGameMapDataToBottom() {}
+  void joinGameMapDataToBottom() {
+    for (int j = 0; j < 4; j++) {
+      int i1 = 3;
+      while(i1 > 0) {
+        if (gameMap[i1][j] == 0) {
+          i1--;
+          continue;
+        }
+        for (int i2 = i1-1;i2 >= 0; i2--) {
+          if (gameMap[i2][j] == 0) {
+            continue;
+          }
+          if (gameMap[i1][j] == gameMap[i2][j]) {
+            gameMap[i1][j] = 2 * gameMap[i1][j];
+            gameMap[i2][j] = 0;
+            i1 = i2;
+          }
+        }
+        i1--;
+      }
+      int notZeroCount = 0;
+      for (int k = 3;k >= 0; k--) {
+        if (gameMap[k][j] != 0) {
+          if (k != (3 - notZeroCount)) {
+            gameMap[3 - notZeroCount][j] = gameMap[k][j];
+            gameMap[k][j] = 0;
+          }
+          notZeroCount++;
+        }
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     Offset lastPosition = Offset.zero;
