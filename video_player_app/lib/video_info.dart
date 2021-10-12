@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -10,17 +11,22 @@ class VideoInfoPage extends StatefulWidget {
 }
 
 class _VideoInfoPageState extends State<VideoInfoPage> {
-
   /// 视频数据源
   List videoInfos = [];
 
   /// 展示播放器区域
   bool _showPlayArea = false;
+  /// 是否正在播放
+  bool _isPlaying = false;
 
-  late VideoPlayerController _videoPlayerController;
+  bool _disposed = false;
+
+  VideoPlayerController? _videoPlayerController;
 
   void _initData() async {
-    await DefaultAssetBundle.of(context).loadString("json/videoinfo.json").then((value) {
+    await DefaultAssetBundle.of(context)
+        .loadString("json/videoinfo.json")
+        .then((value) {
       setState(() {
         videoInfos = json.decode(value);
       });
@@ -39,15 +45,10 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColor.gradientFirst.withOpacity(0.8),
-              AppColor.gradientSecond.withOpacity(0.8)
-            ],
-            begin: Alignment.centerLeft,
-            end: Alignment.topRight
-          )
-        ),
+            gradient: LinearGradient(colors: [
+          AppColor.gradientFirst.withOpacity(0.8),
+          AppColor.gradientSecond.withOpacity(0.8)
+        ], begin: Alignment.centerLeft, end: Alignment.topRight)),
         child: Column(
           children: [
             Padding(
@@ -57,17 +58,30 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                   InkWell(
                       onTap: () {
                         Navigator.pop(context);
-                      }, child: Icon(Icons.arrow_back_ios, size: 20,color: AppColor.secondPageTopIconColor,)),
+                      },
+                      child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 20,
+                        color: AppColor.secondPageTopIconColor,
+                      )),
                   Expanded(child: Container()),
-                  Icon(Icons.info_outline, size: 20,color: AppColor.secondPageTopIconColor,),
+                  Icon(
+                    Icons.info_outline,
+                    size: 20,
+                    color: AppColor.secondPageTopIconColor,
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: 30,),
-            _showPlayArea == false ? _buildVideoHeader() : _buildPlayArea(context),
+            SizedBox(
+              height: 30,
+            ),
+            _showPlayArea == false
+                ? _buildVideoHeader()
+                : _buildPlayArea(context),
             Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 30, right: 30, top: 30),
+              padding: EdgeInsets.only(left: 30, right: 30, top: 30),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(topRight: Radius.circular(70)),
@@ -76,21 +90,34 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                 children: [
                   Row(
                     children: [
-                      Text("Circuit 1: Leg Toning", style: TextStyle(
-                        color: AppColor.circuitsColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
-                      ),),
+                      Text(
+                        "Circuit 1: Leg Toning",
+                        style: TextStyle(
+                            color: AppColor.circuitsColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                       Expanded(child: Container()),
-                      Icon(Icons.loop, size: 30, color: AppColor.loopColor,),
-                      SizedBox(width: 10,),
-                      Text("3 sets", style: TextStyle(
-                        color: AppColor.setsColor,
-                        fontSize: 16,
-                      ),)
+                      Icon(
+                        Icons.loop,
+                        size: 30,
+                        color: AppColor.loopColor,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "3 sets",
+                        style: TextStyle(
+                          color: AppColor.setsColor,
+                          fontSize: 16,
+                        ),
+                      )
                     ],
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   _buildVideoList(),
                 ],
               ),
@@ -109,15 +136,23 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Legs Toning", style: TextStyle(
-            color: AppColor.secondPageTitleColor,
-            fontSize: 25,
-          ),),
-          SizedBox(height: 4,),
-          Text("and Glute Workout", style: TextStyle(
-            color: AppColor.secondPageTitleColor,
-            fontSize: 25,
-          ),),
+          Text(
+            "Legs Toning",
+            style: TextStyle(
+              color: AppColor.secondPageTitleColor,
+              fontSize: 25,
+            ),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Text(
+            "and Glute Workout",
+            style: TextStyle(
+              color: AppColor.secondPageTitleColor,
+              fontSize: 25,
+            ),
+          ),
           Expanded(child: Container()),
           Row(
             children: [
@@ -127,36 +162,50 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                   color: AppColor.secondPageIconColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Row(
-                    children: [
-                      Icon(Icons.timer, size: 20, color: AppColor.secondPageIconColor,),
-                      SizedBox(width: 4,),
-                      Text("68 min", style: TextStyle(
-                        color: AppColor.secondPageTitleColor,
-                        fontSize: 14,
-                      ),)
-                    ]
-
-                ),
+                child: Row(children: [
+                  Icon(
+                    Icons.timer,
+                    size: 20,
+                    color: AppColor.secondPageIconColor,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    "68 min",
+                    style: TextStyle(
+                      color: AppColor.secondPageTitleColor,
+                      fontSize: 14,
+                    ),
+                  )
+                ]),
               ),
-              SizedBox(width: 20,),
+              SizedBox(
+                width: 20,
+              ),
               Container(
                 padding: EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: AppColor.secondPageIconColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Row(
-                    children: [
-                      Icon(Icons.handyman_outlined, size: 20, color: AppColor.secondPageIconColor,),
-                      SizedBox(width: 4,),
-                      Text("Resistent band, Kettlebell", style: TextStyle(
-                        color: AppColor.secondPageTitleColor,
-                        fontSize: 14,
-                      ),)
-                    ]
-
-                ),
+                child: Row(children: [
+                  Icon(
+                    Icons.handyman_outlined,
+                    size: 20,
+                    color: AppColor.secondPageIconColor,
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    "Resistent band, Kettlebell",
+                    style: TextStyle(
+                      color: AppColor.secondPageTitleColor,
+                      fontSize: 14,
+                    ),
+                  )
+                ]),
               ),
             ],
           )
@@ -165,25 +214,68 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     );
   }
 
+  Widget _buildControlView(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.fast_rewind,
+            color: Colors.white,
+            size: 36,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            if (_isPlaying) {
+              setState(() {
+                _isPlaying = false;
+              });
+              _videoPlayerController?.pause();
+            } else {
+              setState(() {
+                _isPlaying = true;
+              });
+              _videoPlayerController?.play();
+            }
+          },
+          child: Icon(
+            _isPlaying ? Icons.pause : Icons.play_arrow,
+            color: Colors.white,
+            size: 36,
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {},
+          child: Icon(
+            Icons.fast_forward,
+            color: Colors.white,
+            size: 36,
+          ),
+        )
+      ],
+    );
+  }
+
   /// 播放器区域
   Widget _buildPlayArea(BuildContext context) {
     final controller = _videoPlayerController;
-    if (controller.value.isInitialized) {
+    if (controller?.value.isInitialized) {
       return Container(
         height: 180,
         color: Colors.green.withOpacity(0.5),
-        child: AspectRatio(
-          aspectRatio: 16/9, child: VideoPlayer(controller)),
+        child: AspectRatio(aspectRatio: 16 / 9, child: VideoPlayer(controller)),
       );
     } else {
       return Container(
         height: 180,
         child: Center(
-          child: Text("Preparing...",
-          style: TextStyle(
-            color: AppColor.secondPageTitleColor,
-            fontSize: 20
-          ),),
+          child: Text(
+            "Preparing...",
+            style:
+                TextStyle(color: AppColor.secondPageTitleColor, fontSize: 20),
+          ),
         ),
       );
     }
@@ -229,53 +321,62 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                         image: AssetImage(videoInfos[index]["thumbnail"]),
-                        fit: BoxFit.cover
-                    ),
+                        fit: BoxFit.cover),
                   ),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(videoInfos[index]["title"], style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                    SizedBox(height: 10,),
-                    Text(videoInfos[index]["time"], style: TextStyle(
-                      color: AppColor.setsColor,
-                    ),),
+                    Text(
+                      videoInfos[index]["title"],
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      videoInfos[index]["time"],
+                      style: TextStyle(
+                        color: AppColor.setsColor,
+                      ),
+                    ),
                   ],
                 )
               ],
             ),
-            SizedBox(height: 12,),
+            SizedBox(
+              height: 12,
+            ),
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: AppColor.gradientSecond.withOpacity(0.2),
                   ),
                   child: Text(
                     "15s rest",
-                    style: TextStyle(
-                        color: AppColor.gradientSecond
-                    ),
+                    style: TextStyle(color: AppColor.gradientSecond),
                   ),
                 ),
                 Row(
                   children: [
-                    for(int i = 0; i< 32;i++)
+                    for (int i = 0; i < 20; i++)
                       Container(
                         width: 3,
                         height: 1,
                         margin: EdgeInsets.symmetric(horizontal: 3),
                         decoration: BoxDecoration(
                             color: AppColor.gradientSecond,
-                            borderRadius: BorderRadius.circular(1)
-                        ),
+                            borderRadius: BorderRadius.circular(1)),
                       )
                   ],
                 )
@@ -287,17 +388,52 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     );
   }
 
+  void _onControllerUpdate() async {
+    if (_disposed) {
+      return;
+    }
+    final controller = _videoPlayerController;
+    if (controller == null) {
+      debugPrint("controller is null");
+      return;
+    }
+    if (!controller.value.isInitialized) {
+      debugPrint("controller is not initialized");
+      return;
+    }
+    final playing = controller.value.isPlaying;
+    _isPlaying = playing;
+  }
+
   void _onTapVideoItem(int index) {
-    final controller = VideoPlayerController.network(videoInfos[index]["videoUrl"]);
+    final controller =
+        VideoPlayerController.network(videoInfos[index]["videoUrl"]);
+    final oldController = _videoPlayerController;
     _videoPlayerController = controller;
+    if (oldController != null) {
+      oldController.removeListener(_onControllerUpdate);
+      oldController.pause();
+    }
     setState(() {
       // redraw
     });
-    controller..initialize().then((value) {
-      controller.play();
-      setState(() {
-        // redraw
+    controller
+      ..initialize().then((value) {
+        oldController?.dispose();
+        controller.addListener(_onControllerUpdate);
+        controller.play();
+        setState(() {
+          // redraw
+        });
       });
-    });
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _videoPlayerController?.pause();
+    _videoPlayerController?.dispose();
+    _videoPlayerController = null;
+    super.dispose();
   }
 }
