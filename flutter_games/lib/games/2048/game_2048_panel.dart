@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_games/games/2048/game_colors.dart';
 
@@ -17,30 +19,52 @@ class _Game2048PanelState extends State<Game2048Panel> {
   /// 在 onPanDown 时设为 true，第一次有效滑动后，设为 false
   bool _firstValidPan = true;
 
-  List gameMap = List.generate(4, (_) => List.generate(4, (_) => 0));
+  List gameMap = List.generate(4, (_) => List<int>.generate(4, (_) => 0));
 
+  /// 当前得分，当两个块合并时，会在当前分数的基础上增加合并后的数字
+  int currentScore = 0;
+
+  void reStartGame() {
+    setState(() {
+      resetGameMap();
+      initGameMap();
+      // 清空分数
+      currentScore = 0;
+    });
+  }
   @override
   void initState() {
     super.initState();
-
     initGameMap();
   }
 
   /// 初始化数据
   void initGameMap() {
-    // gameMap[0][0] = 2;
-    // gameMap[0][1] = 4;
-    // gameMap[0][2] = 8;
-    // gameMap[0][3] = 16;
-    // gameMap[1][0] = 32;
-    // gameMap[1][1] = 64;
-    // gameMap[1][2] = 128;
-    // gameMap[1][3] = 256;
+    /// 执行两次随机
+    randomNewCellData(2);
+    randomNewCellData(4);
+  }
 
-    gameMap[0][0] = 0;
-    gameMap[0][1] = 2;
-    gameMap[0][2] = 2;
-    gameMap[0][3] = 4;
+  void resetGameMap() {
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0;j < 4; j++) {
+        gameMap[i][j] = 0;
+      }
+    }
+  }
+
+  /// 在 gameMap 里随机位置放置指定的数字，
+  /// 需要刷新界面时，需要将这个函数放在 setState 里
+  void randomNewCellData(int data) {
+    while(true) {
+      Random random = Random();
+      int randomI = random.nextInt(4);
+      int randomJ = random.nextInt(4);
+      if (gameMap[randomI][randomJ] == 0) {
+        gameMap[randomI][randomJ] = data;
+        break;
+      }
+    }
   }
 
   /// 根据传入的手势滑动的方向，重新计算 gameMap 数据源
@@ -74,11 +98,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
         for (int j2 = j1+1;j2 < 4; j2++) {
           if (gameMap[i][j2] == 0) {
             continue;
-          }
-          if (gameMap[i][j1] == gameMap[i][j2]) {
+          } else if (gameMap[i][j2] != gameMap[i][j1]) {
+            break;
+          } else {
             gameMap[i][j1] = 2 * gameMap[i][j1];
             gameMap[i][j2] = 0;
             j1 = j2;
+            /// 在这里有两个块的合并，增加分数
+            currentScore += gameMap[i][j1] as int;
           }
         }
         j1++;
@@ -107,11 +134,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
         for (int j2 = j1-1;j2 >= 0; j2--) {
           if (gameMap[i][j2] == 0) {
             continue;
-          }
-          if (gameMap[i][j1] == gameMap[i][j2]) {
+          } else if (gameMap[i][j2] != gameMap[i][j1]) {
+            break;
+          } else {
             gameMap[i][j1] = 2 * gameMap[i][j1];
             gameMap[i][j2] = 0;
             j1 = j2;
+            /// 在这里有两个块的合并，增加分数
+            currentScore += gameMap[i][j1] as int;
           }
         }
         j1--;
@@ -140,11 +170,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
         for (int i2 = i1+1;i2 < 4; i2++) {
           if (gameMap[i2][j] == 0) {
             continue;
-          }
-          if (gameMap[i1][j] == gameMap[i2][j]) {
+          } else if (gameMap[i2][j] != gameMap[i1][j]) {
+            break;
+          } else {
             gameMap[i1][j] = 2 * gameMap[i1][j];
             gameMap[i2][j] = 0;
             i1 = i2;
+            /// 在这里有两个块的合并，增加分数
+            currentScore += gameMap[i1][j] as int;
           }
         }
         i1++;
@@ -173,11 +206,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
         for (int i2 = i1-1;i2 >= 0; i2--) {
           if (gameMap[i2][j] == 0) {
             continue;
-          }
-          if (gameMap[i1][j] == gameMap[i2][j]) {
+          } else if(gameMap[i2][j] != gameMap[i1][j]) {
+            break;
+          } else {
             gameMap[i1][j] = 2 * gameMap[i1][j];
             gameMap[i2][j] = 0;
             i1 = i2;
+            /// 在这里有两个块的合并，增加分数
+            currentScore += gameMap[i1][j] as int;
           }
         }
         i1--;
@@ -218,12 +254,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
               debugPrint("向右滑");
               setState(() {
                 calculateGameMap(PanDirection.RIGHT);
+                randomNewCellData(2);
               });
             } else {
               // 向左滑
               debugPrint("向左滑");
               setState(() {
                 calculateGameMap(PanDirection.LEFT);
+                randomNewCellData(2);
               });
             }
             _firstValidPan = false;
@@ -240,12 +278,14 @@ class _Game2048PanelState extends State<Game2048Panel> {
               debugPrint("向下滑");
               setState(() {
                 calculateGameMap(PanDirection.BOTTOM);
+                randomNewCellData(2);
               });
             } else {
               // 向上滑
               debugPrint("向上滑");
               setState(() {
                 calculateGameMap(PanDirection.TOP);
+                randomNewCellData(2);
               });
             }
             _firstValidPan = false;
