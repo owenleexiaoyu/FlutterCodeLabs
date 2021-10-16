@@ -4,118 +4,153 @@ import 'package:flutter/material.dart';
 import 'package:flutter_games/games/2048/game_colors.dart';
 
 class Game2048Panel extends StatefulWidget {
+
+  final ValueChanged<int>? onScoreChanged;
+
+  Game2048Panel({Key? key, this.onScoreChanged}): super(key: key);
+
   @override
-  _Game2048PanelState createState() => _Game2048PanelState();
+  Game2048PanelState createState() => Game2048PanelState();
 }
 
-class _Game2048PanelState extends State<Game2048Panel> {
+class Game2048PanelState extends State<Game2048Panel> {
   /// 当上下滑动时，左右方向的偏移应该小于这个阈值，左右滑动亦然
   double _crossAxisMaxLimit = 20.0;
 
   /// 当上下滑动时，上下方向的偏移应该大于这个阈值，左右滑动亦然
-  double _mainAxisMinLimit = 80.0;
+  double _mainAxisMinLimit = 60.0;
 
   /// onPanUpdate 会回调多次，只需要第一次有效的就可以了，
   /// 在 onPanDown 时设为 true，第一次有效滑动后，设为 false
   bool _firstValidPan = true;
 
-  List gameMap = List.generate(4, (_) => List<int>.generate(4, (_) => 0));
+  List _gameMap = List.generate(4, (_) => List<int>.generate(4, (_) => 0));
 
   /// 当前得分，当两个块合并时，会在当前分数的基础上增加合并后的数字
-  int currentScore = 0;
+  int _currentScore = 0;
+
+  /// 这一次手势滑动，是不是没有块移动，如果没有块移动，就不能产生新的块
+  bool _noMoveInSwipe = true;
 
   void reStartGame() {
     setState(() {
-      resetGameMap();
-      initGameMap();
+      _resetGameMap();
+      _initGameMap();
       // 清空分数
-      currentScore = 0;
+      _currentScore = 0;
+      widget.onScoreChanged?.call(_currentScore);
     });
   }
+
   @override
   void initState() {
     super.initState();
-    initGameMap();
+    _initGameMap();
   }
 
   /// 初始化数据
-  void initGameMap() {
+  void _initGameMap() {
     /// 执行两次随机
-    randomNewCellData(2);
-    randomNewCellData(4);
+    _randomNewCellData(2);
+    _randomNewCellData(4);
   }
 
-  void resetGameMap() {
+  void _resetGameMap() {
     for (int i = 0; i < 4; i++) {
       for (int j = 0;j < 4; j++) {
-        gameMap[i][j] = 0;
+        _gameMap[i][j] = 0;
       }
     }
   }
 
   /// 在 gameMap 里随机位置放置指定的数字，
   /// 需要刷新界面时，需要将这个函数放在 setState 里
-  void randomNewCellData(int data) {
+  void _randomNewCellData(int data) {
+    /// 在产生新的数字（块）时，
+    /// 需要先判断下是否map中所有的数字都不为0
+    /// 如果都不为0，就直接return，不产生新数字
+    bool isAllNotZero = true;
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+        if (_gameMap[i][j] == 0) {
+          isAllNotZero = false;
+          break;
+        }
+      }
+    }
+    if (isAllNotZero) {
+      debugPrint("gameMap中都不是0，不能生成");
+      return;
+    }
     while(true) {
       Random random = Random();
       int randomI = random.nextInt(4);
       int randomJ = random.nextInt(4);
-      if (gameMap[randomI][randomJ] == 0) {
-        gameMap[randomI][randomJ] = data;
+      if (_gameMap[randomI][randomJ] == 0) {
+        _gameMap[randomI][randomJ] = data;
         break;
       }
     }
   }
 
   /// 根据传入的手势滑动的方向，重新计算 gameMap 数据源
-  void calculateGameMap(PanDirection direction) {
+  void _calculateGameMap(PanDirection direction) {
     switch(direction) {
       case PanDirection.LEFT:
-        joinGameMapDataToLeft();
+        _joinGameMapDataToLeft();
         break;
       case PanDirection.RIGHT:
-        joinGameMapDataToRight();
+        _joinGameMapDataToRight();
         break;
       case PanDirection.TOP:
-        joinGameMapDataToTop();
+        _joinGameMapDataToTop();
         break;
       case PanDirection.BOTTOM:
-        joinGameMapDataToBottom();
+        _joinGameMapDataToBottom();
         break;
       default:
         break;
     }
   }
 
-  void joinGameMapDataToLeft() {
+  void _joinGameMapDataToLeft() {
+    /// 开始改变map中的数据时，先将noMoveInSwipe置为true
+    _noMoveInSwipe = true;
     for (int i = 0; i < 4; i++) {
       int j1 = 0;
       while(j1 < 3) {
-        if (gameMap[i][j1] == 0) {
+        if (_gameMap[i][j1] == 0) {
           j1++;
           continue;
         }
         for (int j2 = j1+1;j2 < 4; j2++) {
-          if (gameMap[i][j2] == 0) {
+          if (_gameMap[i][j2] == 0) {
             continue;
-          } else if (gameMap[i][j2] != gameMap[i][j1]) {
+          } else if (_gameMap[i][j2] != _gameMap[i][j1]) {
             break;
           } else {
-            gameMap[i][j1] = 2 * gameMap[i][j1];
-            gameMap[i][j2] = 0;
-            j1 = j2;
+            _gameMap[i][j1] = 2 * _gameMap[i][j1];
+            _gameMap[i][j2] = 0;
             /// 在这里有两个块的合并，增加分数
-            currentScore += gameMap[i][j1] as int;
+            _currentScore += (_gameMap[i][j1] as int);
+            /// 把分数回调给外界
+            widget.onScoreChanged?.call(_currentScore);
+            /// 这行要写在记录score之后，不然gameMap[i][j1]实际是gameMap[i][j2]，就是0了
+            j1 = j2;
+            /// 有块的合并，说明有移动
+            _noMoveInSwipe =false;
           }
         }
         j1++;
       }
       int notZeroCount = 0;
       for (int k = 0;k < 4;k++) {
-        if (gameMap[i][k] != 0) {
+        if (_gameMap[i][k] != 0) {
           if (k != notZeroCount) {
-            gameMap[i][notZeroCount] = gameMap[i][k];
-            gameMap[i][k] = 0;
+            _gameMap[i][notZeroCount] = _gameMap[i][k];
+            _gameMap[i][k] = 0;
+            /// 有非0数字和0交换，说明有移动
+            _noMoveInSwipe = false;
           }
           notZeroCount++;
         }
@@ -123,35 +158,42 @@ class _Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  void joinGameMapDataToRight() {
+  void _joinGameMapDataToRight() {
+    /// 开始改变map中的数据时，先将noMoveInSwipe置为true
+    _noMoveInSwipe = true;
     for (int i = 0; i < 4; i++) {
       int j1 = 3;
       while(j1 > 0) {
-        if (gameMap[i][j1] == 0) {
+        if (_gameMap[i][j1] == 0) {
           j1--;
           continue;
         }
         for (int j2 = j1-1;j2 >= 0; j2--) {
-          if (gameMap[i][j2] == 0) {
+          if (_gameMap[i][j2] == 0) {
             continue;
-          } else if (gameMap[i][j2] != gameMap[i][j1]) {
+          } else if (_gameMap[i][j2] != _gameMap[i][j1]) {
             break;
           } else {
-            gameMap[i][j1] = 2 * gameMap[i][j1];
-            gameMap[i][j2] = 0;
-            j1 = j2;
+            _gameMap[i][j1] = 2 * _gameMap[i][j1];
+            _gameMap[i][j2] = 0;
             /// 在这里有两个块的合并，增加分数
-            currentScore += gameMap[i][j1] as int;
+            _currentScore += _gameMap[i][j1] as int;
+            widget.onScoreChanged?.call(_currentScore);
+            j1 = j2;
+            /// 有块的合并，说明有移动
+            _noMoveInSwipe = false;
           }
         }
         j1--;
       }
       int notZeroCount = 0;
       for (int k = 3;k >= 0;k--) {
-        if (gameMap[i][k] != 0) {
+        if (_gameMap[i][k] != 0) {
           if (k != (3 - notZeroCount)) {
-            gameMap[i][3 - notZeroCount] = gameMap[i][k];
-            gameMap[i][k] = 0;
+            _gameMap[i][3 - notZeroCount] = _gameMap[i][k];
+            _gameMap[i][k] = 0;
+            /// 有非0数字和0交换，说明有移动
+            _noMoveInSwipe = false;
           }
           notZeroCount++;
         }
@@ -159,35 +201,42 @@ class _Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  void joinGameMapDataToTop() {
+  void _joinGameMapDataToTop() {
+    /// 开始改变map中的数据时，先将noMoveInSwipe置为true
+    _noMoveInSwipe = true;
     for (int j = 0; j < 4; j++) {
       int i1 = 0;
       while(i1 < 3) {
-        if (gameMap[i1][j] == 0) {
+        if (_gameMap[i1][j] == 0) {
           i1++;
           continue;
         }
         for (int i2 = i1+1;i2 < 4; i2++) {
-          if (gameMap[i2][j] == 0) {
+          if (_gameMap[i2][j] == 0) {
             continue;
-          } else if (gameMap[i2][j] != gameMap[i1][j]) {
+          } else if (_gameMap[i2][j] != _gameMap[i1][j]) {
             break;
           } else {
-            gameMap[i1][j] = 2 * gameMap[i1][j];
-            gameMap[i2][j] = 0;
-            i1 = i2;
+            _gameMap[i1][j] = 2 * _gameMap[i1][j];
+            _gameMap[i2][j] = 0;
             /// 在这里有两个块的合并，增加分数
-            currentScore += gameMap[i1][j] as int;
+            _currentScore += _gameMap[i1][j] as int;
+            widget.onScoreChanged?.call(_currentScore);
+            i1 = i2;
+            /// 有块的合并，说明有移动
+            _noMoveInSwipe = false;
           }
         }
         i1++;
       }
       int notZeroCount = 0;
       for (int k = 0;k < 4;k++) {
-        if (gameMap[k][j] != 0) {
+        if (_gameMap[k][j] != 0) {
           if (k != notZeroCount) {
-            gameMap[notZeroCount][j] = gameMap[k][j];
-            gameMap[k][j] = 0;
+            _gameMap[notZeroCount][j] = _gameMap[k][j];
+            _gameMap[k][j] = 0;
+            /// 有非0数字和0交换，说明有移动
+            _noMoveInSwipe = false;
           }
           notZeroCount++;
         }
@@ -195,41 +244,45 @@ class _Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  void joinGameMapDataToBottom() {
+  void _joinGameMapDataToBottom() {
+    _noMoveInSwipe = true;
     for (int j = 0; j < 4; j++) {
       int i1 = 3;
       while(i1 > 0) {
-        if (gameMap[i1][j] == 0) {
+        if (_gameMap[i1][j] == 0) {
           i1--;
           continue;
         }
         for (int i2 = i1-1;i2 >= 0; i2--) {
-          if (gameMap[i2][j] == 0) {
+          if (_gameMap[i2][j] == 0) {
             continue;
-          } else if(gameMap[i2][j] != gameMap[i1][j]) {
+          } else if(_gameMap[i2][j] != _gameMap[i1][j]) {
             break;
           } else {
-            gameMap[i1][j] = 2 * gameMap[i1][j];
-            gameMap[i2][j] = 0;
+            _gameMap[i1][j] = 2 * _gameMap[i1][j];
+            _gameMap[i2][j] = 0;
+            _currentScore += _gameMap[i1][j] as int;
+            widget.onScoreChanged?.call(_currentScore);
             i1 = i2;
-            /// 在这里有两个块的合并，增加分数
-            currentScore += gameMap[i1][j] as int;
+            _noMoveInSwipe = false;
           }
         }
         i1--;
       }
       int notZeroCount = 0;
       for (int k = 3;k >= 0; k--) {
-        if (gameMap[k][j] != 0) {
+        if (_gameMap[k][j] != 0) {
           if (k != (3 - notZeroCount)) {
-            gameMap[3 - notZeroCount][j] = gameMap[k][j];
-            gameMap[k][j] = 0;
+            _gameMap[3 - notZeroCount][j] = _gameMap[k][j];
+            _gameMap[k][j] = 0;
+            _noMoveInSwipe = false;
           }
           notZeroCount++;
         }
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     Offset lastPosition = Offset.zero;
@@ -253,15 +306,19 @@ class _Game2048PanelState extends State<Game2048Panel> {
               // 向右滑
               debugPrint("向右滑");
               setState(() {
-                calculateGameMap(PanDirection.RIGHT);
-                randomNewCellData(2);
+                _calculateGameMap(PanDirection.RIGHT);
+                if (!_noMoveInSwipe) {
+                  _randomNewCellData(2);
+                }
               });
             } else {
               // 向左滑
               debugPrint("向左滑");
               setState(() {
-                calculateGameMap(PanDirection.LEFT);
-                randomNewCellData(2);
+                _calculateGameMap(PanDirection.LEFT);
+                if (!_noMoveInSwipe) {
+                  _randomNewCellData(2);
+                }
               });
             }
             _firstValidPan = false;
@@ -277,15 +334,19 @@ class _Game2048PanelState extends State<Game2048Panel> {
               // 向下滑
               debugPrint("向下滑");
               setState(() {
-                calculateGameMap(PanDirection.BOTTOM);
-                randomNewCellData(2);
+                _calculateGameMap(PanDirection.BOTTOM);
+                if (!_noMoveInSwipe) {
+                  _randomNewCellData(2);
+                }
               });
             } else {
               // 向上滑
               debugPrint("向上滑");
               setState(() {
-                calculateGameMap(PanDirection.TOP);
-                randomNewCellData(2);
+                _calculateGameMap(PanDirection.TOP);
+                if (!_noMoveInSwipe) {
+                  _randomNewCellData(2);
+                }
               });
             }
             _firstValidPan = false;
@@ -321,7 +382,7 @@ class _Game2048PanelState extends State<Game2048Panel> {
               itemBuilder: (context, int index) {
                 int indexI = index ~/ 4;
                 int indexJ = index % 4;
-                return _buildGameCell(gameMap[indexI][indexJ]);
+                return _buildGameCell(_gameMap[indexI][indexJ]);
               },
             ),
           ),
