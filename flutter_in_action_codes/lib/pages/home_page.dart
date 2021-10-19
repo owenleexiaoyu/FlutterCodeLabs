@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
 import 'package:flutter_app/pages/basic_widgets_page.dart';
 import 'package:flutter_app/pages/default_counter_demo.dart';
+import 'package:flutter_app/pages/layout_widgets_page.dart';
 import 'package:flutter_app/pages/manage_state_page.dart';
 import 'package:flutter_app/pages/test_cupertino_style_page.dart';
 import 'package:flutter_app/pages/test_get_state_by_context.dart';
@@ -80,6 +81,14 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return BasicWidgetsPage();
+                  }));
+                },
+              ),
+              HomeItem(
+                title: "布局 Widget 示例",
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return LayoutWidgetsPage();
                   }));
                 },
               ),
