@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/custom_widgets/desc_item.dart';
+import 'package:flutter_app/custom_widgets/home_item.dart';
+import 'package:flutter_app/layout_widgets/frame_layout_demo_2_page.dart';
 
 class FrameLayoutDemoPage extends StatelessWidget {
   @override
@@ -12,6 +14,11 @@ class FrameLayoutDemoPage extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
+            HomeItem(title: "层叠布局 Demo2", onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FrameLayoutDemo2Page();
+              }));
+            }),
             DescItem("Stack 实现层叠布局，Positioned 在 Stack 中进行绝对定位"),
             Expanded(child: Container(
               width: double.infinity,
