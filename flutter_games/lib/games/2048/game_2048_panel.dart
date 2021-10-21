@@ -35,6 +35,9 @@ class Game2048PanelState extends State<Game2048Panel> {
   /// 这一次手势滑动，是不是没有块移动，如果没有块移动，就不能产生新的块
   bool _noMoveInSwipe = true;
 
+  /// 判断是否游戏结束
+  bool _isGameOver = false;
+
   void reStartGame() {
     setState(() {
       _resetGameMap();
@@ -42,6 +45,7 @@ class Game2048PanelState extends State<Game2048Panel> {
       // 清空分数
       _currentScore = 0;
       widget.onScoreChanged?.call(_currentScore);
+      _isGameOver = false;
     });
   }
 
@@ -66,12 +70,8 @@ class Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  /// 在 gameMap 里随机位置放置指定的数字，
-  /// 需要刷新界面时，需要将这个函数放在 setState 里
-  void _randomNewCellData(int data) {
-    /// 在产生新的数字（块）时，
-    /// 需要先判断下是否map中所有的数字都不为0
-    /// 如果都不为0，就直接return，不产生新数字
+  /// 判断Map中的数字是否都不为0
+  bool isGameMapAllNotZero() {
     bool isAllNotZero = true;
     for (int i = 0; i < SIZE; i++) {
       for (int j = 0; j < SIZE; j++) {
@@ -81,7 +81,16 @@ class Game2048PanelState extends State<Game2048Panel> {
         }
       }
     }
-    if (isAllNotZero) {
+    return isAllNotZero;
+  }
+
+  /// 在 gameMap 里随机位置放置指定的数字，
+  /// 需要刷新界面时，需要将这个函数放在 setState 里
+  void _randomNewCellData(int data) {
+    /// 在产生新的数字（块）时，
+    /// 需要先判断下是否map中所有的数字都不为0
+    /// 如果都不为0，就直接return，不产生新数字
+    if (isGameMapAllNotZero()) {
       debugPrint("gameMap中都不是0，不能生成");
       return;
     }
@@ -299,6 +308,19 @@ class Game2048PanelState extends State<Game2048Panel> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isGameOver) {
+      return Stack(
+        children: [
+          _buildGamePanel(context),
+          _buildGameOverMask(context),
+        ],
+      );
+    } else {
+      return _buildGamePanel(context);
+    }
+  }
+
+  Widget _buildGamePanel(BuildContext context) {
     Offset lastPosition = Offset.zero;
     return GestureDetector(
       onPanDown: (DragDownDetails details) {
@@ -324,6 +346,8 @@ class Game2048PanelState extends State<Game2048Panel> {
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
+                /// 判断游戏是否结束
+                _determineGameState();
               });
             } else {
               // 向左滑
@@ -333,6 +357,7 @@ class Game2048PanelState extends State<Game2048Panel> {
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
+                _determineGameState();
               });
             }
             _firstValidPan = false;
@@ -353,6 +378,7 @@ class Game2048PanelState extends State<Game2048Panel> {
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
+                _determineGameState();
               });
             } else {
               // 向上滑
@@ -362,17 +388,16 @@ class Game2048PanelState extends State<Game2048Panel> {
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
+                _determineGameState();
               });
             }
             _firstValidPan = false;
           }
         }
       },
-      child: AspectRatio(
-        aspectRatio: 1.0,
-        child: Container(
-          width: double.infinity,
-          margin: EdgeInsets.all(10),
+      child: _buildGameFrame(
+        context,
+        Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: GameColors.bgColor2,
@@ -425,6 +450,95 @@ class Game2048PanelState extends State<Game2048Panel> {
       ),
     );
   }
+
+  /// 游戏结束时盖在 Panel 上的蒙层
+  Widget _buildGameOverMask(BuildContext context) {
+    return _buildGameFrame(
+        context,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: GameColors.bgColor1.withOpacity(0.5),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Game Over",
+                  style: TextStyle(
+                    color: GameColors.textColor1,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(GameColors.bgColor3),
+                    ),
+                    onPressed: () {
+                      reStartGame();
+                    },
+                    child: Text("ReStart"))
+              ],
+            ),
+          ),
+        ));
+  }
+
+  /// 创建一个 1 * 1 的游戏框架布局
+  Widget _buildGameFrame(BuildContext context, Widget child) {
+    double minSize = min(
+        MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: Container(
+        width: minSize,
+        height: minSize,
+        margin: EdgeInsets.all(10),
+        child: child,
+      ),
+    );
+  }
+
+  void _determineGameState() {
+    if (!isGameMapAllNotZero()) {
+      return;
+    }
+    /// 如果 Map 中数字都不为0，则需要判断横纵方向上是否存在可以合并的数字，
+    /// 如果有，则游戏不算结束，都没有的话，游戏结束
+    bool canMerge = false;
+    for (int i = 0; i< SIZE; i++) {
+      for (int j = 0; j< SIZE  - 1; j++) {
+        if (_gameMap[i][j] == _gameMap[i][j + 1]) {
+          canMerge = true;
+          break;
+        }
+      }
+      if (canMerge) {
+        break;
+      }
+    }
+    for (int j = 0; j < SIZE; j++) {
+      for (int i = 0; i < SIZE  - 1; i++) {
+        if (_gameMap[i][j] == _gameMap[i + 1][j]) {
+          canMerge = true;
+          break;
+        }
+      }
+      if (canMerge) {
+        break;
+      }
+    }
+    // 横纵遍历完后，如果没有可以合并的，游戏结束
+    if (!canMerge) {
+      setState(() {
+        _isGameOver = true;
+      });
+    }
+  }
+
 }
 
 /// 手势滑动的四个方向
