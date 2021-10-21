@@ -187,7 +187,9 @@ class _Game2048PageState extends State<Game2048Page> {
 
   void readHighestScoreFromSp() async {
     final SharedPreferences sp = await _spFuture;
-    highestScore = sp.getInt(GAME_2048_HIGHEST_SCORE) ?? 0;
+    setState(() {
+      highestScore = sp.getInt(GAME_2048_HIGHEST_SCORE) ?? 0;
+    });
   }
 
   void storeHighestScoreToSp() async {
