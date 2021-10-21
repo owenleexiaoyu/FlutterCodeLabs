@@ -442,7 +442,7 @@ class Game2048PanelState extends State<Game2048Panel> {
           value == 0 ? "" : value.toString(),
           style: TextStyle(
             color:
-                value == 2 || value == 4 ? GameColors.textColor1 : Colors.white,
+                value == 2 || value == 4 ? GameColors.textColor1 : GameColors.textColor3,
             fontWeight: FontWeight.bold,
             fontSize: 30,
           ),
