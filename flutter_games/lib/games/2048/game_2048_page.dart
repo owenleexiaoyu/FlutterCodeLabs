@@ -30,26 +30,42 @@ class _Game2048PageState extends State<Game2048Page> {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget gamePanel = Game2048Panel(
+      key: _gamePanelKey,
+      onScoreChanged: (score) {
+        setState(() {
+          currentScore = score;
+          if (currentScore > highestScore) {
+            highestScore = currentScore;
+            storeHighestScoreToSp();
+          }
+        });
+      },);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: Container(
-        padding: EdgeInsets.only(top: 70),
+        padding: EdgeInsets.only(top: 30),
         color: GameColors.bgColor1,
-        child: Column(
-          children: [
-            gameHeader(),
-            Game2048Panel(
-              key: _gamePanelKey,
-              onScoreChanged: (score) {
-              setState(() {
-                currentScore = score;
-                if (currentScore > highestScore) {
-                  highestScore = currentScore;
-                  storeHighestScoreToSp();
-                }
-              });
-            },),
-          ],
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return Column(
+              children: [
+                Flexible(child: gameHeader()),
+                Flexible(flex: 2,child: gamePanel)
+              ],
+            );
+            } else {
+              return Row(
+              children: [
+                Flexible(child: gameHeader()),
+                Flexible(flex: 2,child: gamePanel)
+              ],
+            );
+            }
+          },
         ),
       ),
     );

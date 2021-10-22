@@ -15,16 +15,16 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            HomeItem(title: "2048", onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Game2048Page();
+              }));
+            }),
             HomeItem(title: "贪吃蛇", onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return GameSnakePage();
               }));
             }),
-            HomeItem(title: "2048", onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Game2048Page();
-              }));
-            })
           ],
         ),
       ),
