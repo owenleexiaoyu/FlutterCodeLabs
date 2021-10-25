@@ -4,6 +4,7 @@ import 'package:flutter_app/pages/basic_widgets_page.dart';
 import 'package:flutter_app/pages/default_counter_demo.dart';
 import 'package:flutter_app/pages/layout_widgets_page.dart';
 import 'package:flutter_app/pages/manage_state_page.dart';
+import 'package:flutter_app/pages/opensource_libs_page.dart';
 import 'package:flutter_app/pages/test_cupertino_style_page.dart';
 import 'package:flutter_app/pages/test_get_state_by_context.dart';
 import 'package:flutter_app/pages/test_get_state_by_globalkey.dart';
@@ -89,6 +90,14 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return LayoutWidgetsPage();
+                  }));
+                },
+              ),
+              HomeItem(
+                title: "三方开源库",
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return OpenSourceLibsPage();
                   }));
                 },
               ),

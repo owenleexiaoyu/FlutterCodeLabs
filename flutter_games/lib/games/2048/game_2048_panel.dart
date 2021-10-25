@@ -105,26 +105,6 @@ class Game2048PanelState extends State<Game2048Panel> {
     }
   }
 
-  /// 根据传入的手势滑动的方向，重新计算 gameMap 数据源
-  void _calculateGameMap(PanDirection direction) {
-    switch (direction) {
-      case PanDirection.LEFT:
-        _joinGameMapDataToLeft();
-        break;
-      case PanDirection.RIGHT:
-        _joinGameMapDataToRight();
-        break;
-      case PanDirection.TOP:
-        _joinGameMapDataToTop();
-        break;
-      case PanDirection.BOTTOM:
-        _joinGameMapDataToBottom();
-        break;
-      default:
-        break;
-    }
-  }
-
   void _joinGameMapDataToLeft() {
     /// 开始改变map中的数据时，先将noMoveInSwipe置为true
     _noMoveInSwipe = true;
@@ -342,22 +322,22 @@ class Game2048PanelState extends State<Game2048Panel> {
               // 向右滑
               debugPrint("向右滑");
               setState(() {
-                _calculateGameMap(PanDirection.RIGHT);
+                _joinGameMapDataToRight();
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
                 /// 判断游戏是否结束
-                _determineGameState();
+                _checkGameState();
               });
             } else {
               // 向左滑
               debugPrint("向左滑");
               setState(() {
-                _calculateGameMap(PanDirection.LEFT);
+                _joinGameMapDataToLeft();
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
-                _determineGameState();
+                _checkGameState();
               });
             }
             _firstValidPan = false;
@@ -374,21 +354,21 @@ class Game2048PanelState extends State<Game2048Panel> {
               // 向下滑
               debugPrint("向下滑");
               setState(() {
-                _calculateGameMap(PanDirection.BOTTOM);
+                _joinGameMapDataToBottom();
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
-                _determineGameState();
+                _checkGameState();
               });
             } else {
               // 向上滑
               debugPrint("向上滑");
               setState(() {
-                _calculateGameMap(PanDirection.TOP);
+                _joinGameMapDataToTop();
                 if (!_noMoveInSwipe) {
                   _randomNewCellData(2);
                 }
-                _determineGameState();
+                _checkGameState();
               });
             }
             _firstValidPan = false;
@@ -502,7 +482,7 @@ class Game2048PanelState extends State<Game2048Panel> {
     );
   }
 
-  void _determineGameState() {
+  void _checkGameState() {
     if (!isGameMapAllNotZero()) {
       return;
     }
@@ -541,5 +521,3 @@ class Game2048PanelState extends State<Game2048Panel> {
 
 }
 
-/// 手势滑动的四个方向
-enum PanDirection { TOP, BOTTOM, LEFT, RIGHT }
