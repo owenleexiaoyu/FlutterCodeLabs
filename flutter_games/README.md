@@ -1,16 +1,14 @@
-# flutter_games
+# Gami
 
-Simple games build with Flutter
+一个聚合了多款经典休闲益智游戏的 App。使用 Flutter 进行开发。
 
-## Getting Started
+## 2048
 
-This project is a starting point for a Flutter application.
+### 运行效果
 
-A few resources to get you started if this is your first Flutter project:
+<img src="https://gitee.com/owenlee233/image_store/raw/master/202110260038225.gif" alt="final" style="zoom:50%;" />
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### 实现文章
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[边学边玩，Flutter 制作 2048 小游戏](https://juejin.cn/post/7023245080265752584)
+
