@@ -20,7 +20,7 @@ class Game2048PanelState extends State<Game2048Panel> {
   double _crossAxisMaxLimit = 20.0;
 
   /// 当上下滑动时，上下方向的偏移应该大于这个阈值，左右滑动亦然
-  double _mainAxisMinLimit = 60.0;
+  double _mainAxisMinLimit = 40.0;
 
   /// onPanUpdate 会回调多次，只需要第一次有效的就可以了，
   /// 在 onPanDown 时设为 true，第一次有效滑动后，设为 false
