@@ -47,7 +47,7 @@ class _Game2048PageState extends State<Game2048Page> {
       extendBodyBehindAppBar: true,
       body: Container(
         padding: EdgeInsets.only(top: 30),
-        color: GameColors.bgColor1,
+        color: Game2048Colors.bgColor1,
         child: OrientationBuilder(
           builder: (context, orientation) {
             if (orientation == Orientation.portrait) {
@@ -84,7 +84,7 @@ class _Game2048PageState extends State<Game2048Page> {
                 Text(
                   "2048",
                   style: TextStyle(
-                      color: GameColors.textColor1,
+                      color: Game2048Colors.textColor1,
                       fontSize: 56,
                       fontWeight: FontWeight.bold),
                 ),
@@ -92,7 +92,7 @@ class _Game2048PageState extends State<Game2048Page> {
                   "Play 2048 Game Now",
                   style: TextStyle(
                     fontSize: 14,
-                    color: GameColors.textColor1,
+                    color: Game2048Colors.textColor1,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -101,7 +101,7 @@ class _Game2048PageState extends State<Game2048Page> {
                 ),
                 Text(
                   "Join numbers and get to the 2048 tile!",
-                  style: TextStyle(color: GameColors.textColor1),
+                  style: TextStyle(color: Game2048Colors.textColor1),
                 )
               ],
             ),
@@ -118,14 +118,14 @@ class _Game2048PageState extends State<Game2048Page> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: GameColors.bgColor2,
+                    color: Game2048Colors.bgColor2,
                   ),
                   child: Column(
                     children: [
                       Text(
                         "SCORE",
                         style: TextStyle(
-                          color: GameColors.textColor2,
+                          color: Game2048Colors.textColor2,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -133,7 +133,7 @@ class _Game2048PageState extends State<Game2048Page> {
                       Text(
                         currentScore.toString(),
                         style: TextStyle(
-                            color: GameColors.textColor3,
+                            color: Game2048Colors.textColor3,
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       )
@@ -148,14 +148,14 @@ class _Game2048PageState extends State<Game2048Page> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: GameColors.bgColor2,
+                    color: Game2048Colors.bgColor2,
                   ),
                   child: Column(
                     children: [
                       Text(
                         "HIGHEST",
                         style: TextStyle(
-                          color: GameColors.textColor2,
+                          color: Game2048Colors.textColor2,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -163,7 +163,7 @@ class _Game2048PageState extends State<Game2048Page> {
                       Text(
                         highestScore.toString(),
                         style: TextStyle(
-                            color: GameColors.textColor3,
+                            color: Game2048Colors.textColor3,
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       )
@@ -176,7 +176,7 @@ class _Game2048PageState extends State<Game2048Page> {
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: GameColors.bgColor3,
+                    color: Game2048Colors.bgColor3,
                   ),
                   child: Center(
                     child: InkWell(

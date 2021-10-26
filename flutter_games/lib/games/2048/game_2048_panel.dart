@@ -380,7 +380,7 @@ class Game2048PanelState extends State<Game2048Panel> {
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: GameColors.bgColor2,
+            color: Game2048Colors.bgColor2,
             borderRadius: BorderRadius.circular(10),
           ),
           child: MediaQuery.removePadding(
@@ -414,7 +414,7 @@ class Game2048PanelState extends State<Game2048Panel> {
   Widget _buildGameCell(int value) {
     return Container(
       decoration: BoxDecoration(
-        color: GameColors.mapValueToColor(value),
+        color: Game2048Colors.mapValueToColor(value),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Center(
@@ -422,7 +422,7 @@ class Game2048PanelState extends State<Game2048Panel> {
           value == 0 ? "" : value.toString(),
           style: TextStyle(
             color:
-                value == 2 || value == 4 ? GameColors.textColor1 : GameColors.textColor3,
+                value == 2 || value == 4 ? Game2048Colors.textColor1 : Game2048Colors.textColor3,
             fontWeight: FontWeight.bold,
             fontSize: 30,
           ),
@@ -438,7 +438,7 @@ class Game2048PanelState extends State<Game2048Panel> {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: GameColors.bgColor1.withOpacity(0.5),
+            color: Game2048Colors.bgColor1.withOpacity(0.5),
           ),
           child: Center(
             child: Column(
@@ -447,7 +447,7 @@ class Game2048PanelState extends State<Game2048Panel> {
                 Text(
                   "Game Over",
                   style: TextStyle(
-                    color: GameColors.textColor1,
+                    color: Game2048Colors.textColor1,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -455,7 +455,7 @@ class Game2048PanelState extends State<Game2048Panel> {
                 ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(GameColors.bgColor3),
+                          MaterialStateProperty.all<Color>(Game2048Colors.bgColor3),
                     ),
                     onPressed: () {
                       reStartGame();

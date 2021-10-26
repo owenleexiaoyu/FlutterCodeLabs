@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-class GameColors {
+class Game2048Colors {
 
   /// 背景颜色
   static Color bgColor1 = Color(0xFFFAF8EF);
@@ -30,31 +30,31 @@ class GameColors {
   static Color mapValueToColor(int value) {
     switch(value){
       case 0:
-        return GameColors.gc0;
+        return Game2048Colors.gc0;
       case 2:
-        return GameColors.gc2;
+        return Game2048Colors.gc2;
       case 4:
-        return GameColors.gc4;
+        return Game2048Colors.gc4;
       case 8:
-        return GameColors.gc8;
+        return Game2048Colors.gc8;
       case 16:
-        return GameColors.gc16;
+        return Game2048Colors.gc16;
       case 32:
-        return GameColors.gc32;
+        return Game2048Colors.gc32;
       case 64:
-        return GameColors.gc64;
+        return Game2048Colors.gc64;
       case 128:
-        return GameColors.gc128;
+        return Game2048Colors.gc128;
       case 256:
-        return GameColors.gc256;
+        return Game2048Colors.gc256;
       case 512:
-        return GameColors.gc512;
+        return Game2048Colors.gc512;
       case 1024:
-        return GameColors.gc1024;
+        return Game2048Colors.gc1024;
       case 2048:
-        return GameColors.gc2048;
+        return Game2048Colors.gc2048;
       default:
-        return GameColors.gc2048;
+        return Game2048Colors.gc2048;
     }
   }
 }
