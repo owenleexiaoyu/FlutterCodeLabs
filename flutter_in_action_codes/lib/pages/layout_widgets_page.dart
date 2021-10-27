@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
+import 'package:flutter_app/layout_widgets/align_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/constrined_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/flex_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/flow_layout_demo_page.dart';
@@ -41,6 +42,11 @@ class LayoutWidgetsPage extends StatelessWidget {
               HomeItem(title: "层叠布局", onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return FrameLayoutDemoPage();
+                }));
+              }),
+              HomeItem(title: "对齐与相对定位", onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return AlignLayoutDemoPage();
                 }));
               }),
             ],

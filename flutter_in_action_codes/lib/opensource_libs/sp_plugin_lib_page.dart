@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/custom_widgets/desc_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SpPluginLibPage extends StatefulWidget {
@@ -28,10 +29,17 @@ class _SpPluginLibPageState extends State<SpPluginLibPage> {
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
-        child: Center(
-          child: Text(
-            "你一共点击了 $count 次"
-          ),
+        child: Column(
+          children: [
+            DescItem("点击次数会被保存到磁盘中，退出页面不会清空"),
+            Expanded(
+              child: Center(
+                child: Text(
+                  "你一共点击了 $count 次"
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
