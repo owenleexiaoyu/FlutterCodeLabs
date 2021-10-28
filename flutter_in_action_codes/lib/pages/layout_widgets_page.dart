@@ -5,7 +5,9 @@ import 'package:flutter_app/layout_widgets/constrined_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/flex_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/flow_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/frame_layout_demo_page.dart';
+import 'package:flutter_app/layout_widgets/layout_builder_demo_page.dart';
 import 'package:flutter_app/layout_widgets/linear_layout_demo_page.dart';
+import 'package:flutter_app/layout_widgets/padding_demo_page.dart';
 
 class LayoutWidgetsPage extends StatelessWidget {
   @override
@@ -47,6 +49,16 @@ class LayoutWidgetsPage extends StatelessWidget {
               HomeItem(title: "对齐与相对定位", onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return AlignLayoutDemoPage();
+                }));
+              }),
+              HomeItem(title: "LayoutBuilder Demo", onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return LayoutBuilderDemoPage();
+                }));
+              }),
+              HomeItem(title: "Padding Demo", onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return PaddingDemoPage();
                 }));
               }),
             ],
