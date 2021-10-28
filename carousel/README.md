@@ -6,4 +6,5 @@
 
 效果如图：
 
-<img src="/Users/lixiaoyu/Downloads/UI.png" alt="UI" style="zoom:33%;" />
+<img src="https://gitee.com/owenlee233/image_store/raw/master/202110282333204.png" alt="UI" style="zoom:33%;" />
+
