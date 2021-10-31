@@ -100,7 +100,7 @@ class LayoutLogPrinter<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
+        builder: (BuildContext context, Bo  xConstraints constraints) {
       debugPrint("${tag ?? key ?? child} : $constraints");
       return child;
     });

@@ -13,17 +13,20 @@ class _HomePageState extends State<HomePage> {
 
   List info = [];
 
-  void _initData() {
-    DefaultAssetBundle.of(context).loadString("json/info.json").then((value) {
-      info = json.decode(value);
-      print(info);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _initData();
+  }
+
+  /// Load data from json file
+  void _initData() {
+    DefaultAssetBundle.of(context).loadString("json/info.json").then((value) {
+      setState(() {
+        info = json.decode(value);
+      });
+      print(info);
+    });
   }
 
   @override
