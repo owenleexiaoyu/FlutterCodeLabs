@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -16,6 +15,7 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
 
   /// 展示播放器区域
   bool _showPlayArea = false;
+
   /// 是否正在播放
   bool _isPlaying = false;
 
@@ -23,8 +23,8 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
 
   VideoPlayerController? _videoPlayerController;
 
-  void _initData() async {
-    await DefaultAssetBundle.of(context)
+  void _initData() {
+    DefaultAssetBundle.of(context)
         .loadString("json/videoinfo.json")
         .then((value) {
       setState(() {
@@ -51,34 +51,18 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
         ], begin: Alignment.centerLeft, end: Alignment.topRight)),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30, top: 70),
-              child: Row(
-                children: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
-                        color: AppColor.secondPageTopIconColor,
-                      )),
-                  Expanded(child: Container()),
-                  Icon(
-                    Icons.info_outline,
-                    size: 20,
-                    color: AppColor.secondPageTopIconColor,
-                  ),
-                ],
-              ),
-            ),
+            _titleBar(),
             SizedBox(
               height: 30,
             ),
             _showPlayArea == false
                 ? _buildVideoHeader()
-                : _buildPlayArea(context),
+                : Column(
+                    children: [
+                      _playerView(context),
+                      _buildControlView(context)
+                    ],
+                  ),
             Expanded(
                 child: Container(
               padding: EdgeInsets.only(left: 30, right: 30, top: 30),
@@ -124,6 +108,32 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
             )),
           ],
         ),
+      ),
+    );
+  }
+
+  /// Title bar 部分
+  Widget _titleBar() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, right: 30, top: 70),
+      child: Row(
+        children: [
+          InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+                color: AppColor.secondPageTopIconColor,
+              )),
+          Expanded(child: Container()),
+          Icon(
+            Icons.info_outline,
+            size: 20,
+            color: AppColor.secondPageTopIconColor,
+          ),
+        ],
       ),
     );
   }
@@ -214,6 +224,31 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     );
   }
 
+  /// 播放器区域
+  Widget _playerView(BuildContext context) {
+    final controller = _videoPlayerController;
+    if (controller?.value.isInitialized == true) {
+      return Container(
+        height: 180,
+        color: Colors.green.withOpacity(0.5),
+        child:
+            AspectRatio(aspectRatio: 16 / 9, child: VideoPlayer(controller!)),
+      );
+    } else {
+      return Container(
+        height: 180,
+        child: Center(
+          child: Text(
+            "Preparing...",
+            style:
+                TextStyle(color: AppColor.secondPageTitleColor, fontSize: 20),
+          ),
+        ),
+      );
+    }
+  }
+
+  /// 播放控制栏
   Widget _buildControlView(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -225,6 +260,9 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
             color: Colors.white,
             size: 36,
           ),
+        ),
+        SizedBox(
+          width: 20,
         ),
         ElevatedButton(
           onPressed: () async {
@@ -246,6 +284,9 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
             size: 36,
           ),
         ),
+        SizedBox(
+          width: 20,
+        ),
         ElevatedButton(
           onPressed: () {},
           child: Icon(
@@ -256,29 +297,6 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
         )
       ],
     );
-  }
-
-  /// 播放器区域
-  Widget _buildPlayArea(BuildContext context) {
-    final controller = _videoPlayerController;
-    if (controller?.value.isInitialized) {
-      return Container(
-        height: 180,
-        color: Colors.green.withOpacity(0.5),
-        child: AspectRatio(aspectRatio: 16 / 9, child: VideoPlayer(controller)),
-      );
-    } else {
-      return Container(
-        height: 180,
-        child: Center(
-          child: Text(
-            "Preparing...",
-            style:
-                TextStyle(color: AppColor.secondPageTitleColor, fontSize: 20),
-          ),
-        ),
-      );
-    }
   }
 
   /// 视频列表
