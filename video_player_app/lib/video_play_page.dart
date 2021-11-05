@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,6 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
       setState(() {
         videoInfos = json.decode(value);
       });
-      debugPrint(videoInfos.toString());
     });
   }
 
@@ -257,105 +257,149 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     }
   }
 
+  String formatDuration(int value) {
+    return value < 10 ? "0$value" : "$value";
+  }
+
   /// 播放控制栏
   Widget _controlBar(BuildContext context) {
     final isMute = (_videoPlayerController?.value.volume ?? 0) <= 0;
+    final duration = _duration?.inSeconds ?? 0;
+    debugPrint("duration = $_duration");
+    final head = _position?.inSeconds ?? 0;
+    final remained = max(0, duration - head);  // 还没有播的时长
+    final mins = formatDuration(remained ~/ 60);
+    final secs = formatDuration(remained % 60);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
         children: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                if (isMute) {
-                  _videoPlayerController?.setVolume(1);
-                } else {
-                  _videoPlayerController?.setVolume(0);
-                }
-              });
-            },
-            child: Icon(
-              isMute ? Icons.volume_off : Icons.volume_up,
-              size: 20,
-              color: Colors.white,
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: Colors.red[700],
+              inactiveTrackColor: Colors.red[100],
+              trackHeight: 3.0,
+              thumbColor: Colors.redAccent,
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              final index = _playingIndex - 1;
-              if (index >= 0 && videoInfos.length >= 0) {
-                _initializeVideo(index);
-              } else {
-                Get.snackbar(
-                  "Video",
-                  "No more videos ahead",
-                  snackPosition: SnackPosition.BOTTOM,
-                    icon: Icon(
-                      Icons.face,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: AppColor.gradientSecond,
-                    colorText: Colors.white
-                );
-              }
+            child: Slider(value: max(0, min(_progress * 100, 100)),
+                min: 0,
+                max: 100,
+                divisions: 100,
+                label: _position?.toString().split(".")[0],
+                onChanged: (value) {
+                  setState(() {
+                    _progress = value * 0.01;
+                  });
+                },
+            onChangeStart: (value) {
+              _videoPlayerController?.pause();
             },
-            child: Icon(
-              Icons.fast_rewind,
-              color: Colors.white,
-              size: 36,
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (_isPlaying) {
-                setState(() {
-                  _isPlaying = false;
-                });
-                _videoPlayerController?.pause();
-              } else {
-                setState(() {
-                  _isPlaying = true;
-                });
+            onChangeEnd: (value) {
+              final duration = _duration;
+              if (duration != null) {
+                var newPosition = (max(0, min(value, 99)) * 0.01 * duration.inMilliseconds).toInt();
+                _videoPlayerController?.seekTo(Duration(milliseconds: newPosition));
                 _videoPlayerController?.play();
               }
-            },
-            child: Icon(
-              _isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
-              size: 36,
-            ),
+            },),
           ),
-          TextButton(
-            onPressed: () {
-              final index = _playingIndex + 1;
-              if (index < videoInfos.length) {
-                _initializeVideo(index);
-              } else {
-                Get.snackbar(
-                  "Video",
-                  "You have finished watching all videos!",
-                  snackPosition: SnackPosition.BOTTOM,
-                  icon: Icon(
-                    Icons.face,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                  backgroundColor: AppColor.gradientSecond,
-                  colorText: Colors.white
-                );
-              }
-            },
-            child: Icon(
-              Icons.fast_forward,
-              color: Colors.white,
-              size: 36,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    if (isMute) {
+                      _videoPlayerController?.setVolume(1);
+                    } else {
+                      _videoPlayerController?.setVolume(0);
+                    }
+                  });
+                },
+                child: Icon(
+                  isMute ? Icons.volume_off : Icons.volume_up,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  final index = _playingIndex - 1;
+                  if (index >= 0 && videoInfos.length >= 0) {
+                    _initializeVideo(index);
+                  } else {
+                    Get.snackbar(
+                      "Video",
+                      "No more videos ahead",
+                      snackPosition: SnackPosition.BOTTOM,
+                        icon: Icon(
+                          Icons.face,
+                          size: 30,
+                          color: Colors.white,
+                        ),
+                        backgroundColor: AppColor.gradientSecond,
+                        colorText: Colors.white
+                    );
+                  }
+                },
+                child: Icon(
+                  Icons.fast_rewind,
+                  color: Colors.white,
+                  size: 36,
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (_isPlaying) {
+                    setState(() {
+                      _isPlaying = false;
+                    });
+                    _videoPlayerController?.pause();
+                  } else {
+                    setState(() {
+                      _isPlaying = true;
+                    });
+                    _videoPlayerController?.play();
+                  }
+                },
+                child: Icon(
+                  _isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                  size: 36,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  final index = _playingIndex + 1;
+                  if (index < videoInfos.length) {
+                    _initializeVideo(index);
+                  } else {
+                    Get.snackbar(
+                      "Video",
+                      "You have finished watching all videos!",
+                      snackPosition: SnackPosition.BOTTOM,
+                      icon: Icon(
+                        Icons.face,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: AppColor.gradientSecond,
+                      colorText: Colors.white
+                    );
+                  }
+                },
+                child: Icon(
+                  Icons.fast_forward,
+                  color: Colors.white,
+                  size: 36,
+                ),
+              ),
+              Text("$mins:$secs", style: TextStyle(
+                color: Colors.white
+              ),)
+            ],
           ),
-          Text("00:45", style: TextStyle(
-            color: Colors.white
-          ),)
         ],
       ),
     );
@@ -495,11 +539,23 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
         });
       });
   }
+  var _onUpdateControllerTime = 0;
+
+  Duration? _duration; // 视频的总时长
+  Duration? _position; // 已播放的时长
+  var _progress = 0.0; // 已播放时长占总时长的比例
 
   void _onControllerUpdate() async {
     if (_disposed) {
       return;
     }
+    /// 频控，500ms内直接返回，防止频繁触发重绘
+    final now = DateTime.now().millisecondsSinceEpoch;
+    if (_onUpdateControllerTime > now) {
+      return;
+    }
+    _onUpdateControllerTime = now + 500;
+
     final controller = _videoPlayerController;
     if (controller == null) {
       debugPrint("controller is null");
@@ -509,8 +565,22 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
       debugPrint("controller is not initialized");
       return;
     }
+    /// 从播放器回调中获取总时长和已播放时长信息
+    if (_duration == null) {
+      _duration = controller.value.duration;
+    }
+    if (_duration == null) {
+      return;
+    }
+    _position = await controller.position;
+
     final playing = controller.value.isPlaying;
     _isPlaying = playing;
+    if (playing && !_disposed) {
+      setState(() {
+        _progress = _position!.inMilliseconds.ceilToDouble() / _duration!.inMilliseconds.ceilToDouble();
+      });
+    }
   }
 
   @override
