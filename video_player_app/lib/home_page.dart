@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:video_player_app/colors.dart';
-import 'package:video_player_app/video_info.dart';
+import 'package:video_player_app/video_play_page.dart';
 
 class HomePage extends StatefulWidget {
   @override

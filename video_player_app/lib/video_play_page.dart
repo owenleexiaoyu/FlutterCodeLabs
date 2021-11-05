@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_app/colors.dart';
 
@@ -20,6 +21,9 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
   bool _isPlaying = false;
 
   bool _disposed = false;
+
+  /// 正在播放的 index
+  int _playingIndex = -1;
 
   VideoPlayerController? _videoPlayerController;
 
@@ -60,7 +64,7 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                 : Column(
                     children: [
                       _playerView(context),
-                      _buildControlView(context)
+                      _controlBar(context)
                     ],
                   ),
             Expanded(
@@ -102,7 +106,7 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
                   SizedBox(
                     height: 30,
                   ),
-                  _buildVideoList(),
+                  _videoList(),
                 ],
               ),
             )),
@@ -237,11 +241,16 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     } else {
       return Container(
         height: 180,
-        child: Center(
-          child: Text(
-            "Preparing...",
-            style:
-                TextStyle(color: AppColor.secondPageTitleColor, fontSize: 20),
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Center(
+            child: Text(
+              "Preparing...",
+              style: TextStyle(
+                color: AppColor.secondPageTitleColor,
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
       );
@@ -249,58 +258,111 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
   }
 
   /// 播放控制栏
-  Widget _buildControlView(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {},
-          child: Icon(
-            Icons.fast_rewind,
-            color: Colors.white,
-            size: 36,
-          ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            if (_isPlaying) {
+  Widget _controlBar(BuildContext context) {
+    final isMute = (_videoPlayerController?.value.volume ?? 0) <= 0;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+            onPressed: () {
               setState(() {
-                _isPlaying = false;
+                if (isMute) {
+                  _videoPlayerController?.setVolume(1);
+                } else {
+                  _videoPlayerController?.setVolume(0);
+                }
               });
-              _videoPlayerController?.pause();
-            } else {
-              setState(() {
-                _isPlaying = true;
-              });
-              _videoPlayerController?.play();
-            }
-          },
-          child: Icon(
-            _isPlaying ? Icons.pause : Icons.play_arrow,
-            color: Colors.white,
-            size: 36,
+            },
+            child: Icon(
+              isMute ? Icons.volume_off : Icons.volume_up,
+              size: 20,
+              color: Colors.white,
+            ),
           ),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        ElevatedButton(
-          onPressed: () {},
-          child: Icon(
-            Icons.fast_forward,
-            color: Colors.white,
-            size: 36,
+          TextButton(
+            onPressed: () {
+              final index = _playingIndex - 1;
+              if (index >= 0 && videoInfos.length >= 0) {
+                _initializeVideo(index);
+              } else {
+                Get.snackbar(
+                  "Video",
+                  "No more videos ahead",
+                  snackPosition: SnackPosition.BOTTOM,
+                    icon: Icon(
+                      Icons.face,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: AppColor.gradientSecond,
+                    colorText: Colors.white
+                );
+              }
+            },
+            child: Icon(
+              Icons.fast_rewind,
+              color: Colors.white,
+              size: 36,
+            ),
           ),
-        )
-      ],
+          TextButton(
+            onPressed: () async {
+              if (_isPlaying) {
+                setState(() {
+                  _isPlaying = false;
+                });
+                _videoPlayerController?.pause();
+              } else {
+                setState(() {
+                  _isPlaying = true;
+                });
+                _videoPlayerController?.play();
+              }
+            },
+            child: Icon(
+              _isPlaying ? Icons.pause : Icons.play_arrow,
+              color: Colors.white,
+              size: 36,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final index = _playingIndex + 1;
+              if (index < videoInfos.length) {
+                _initializeVideo(index);
+              } else {
+                Get.snackbar(
+                  "Video",
+                  "You have finished watching all videos!",
+                  snackPosition: SnackPosition.BOTTOM,
+                  icon: Icon(
+                    Icons.face,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: AppColor.gradientSecond,
+                  colorText: Colors.white
+                );
+              }
+            },
+            child: Icon(
+              Icons.fast_forward,
+              color: Colors.white,
+              size: 36,
+            ),
+          ),
+          Text("00:45", style: TextStyle(
+            color: Colors.white
+          ),)
+        ],
+      ),
     );
   }
 
   /// 视频列表
-  Widget _buildVideoList() {
+  Widget _videoList() {
     return Expanded(
       child: MediaQuery.removePadding(
         removeTop: true,
@@ -308,14 +370,14 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
         child: ListView.builder(
             itemCount: videoInfos.length,
             itemBuilder: (_, index) {
-              return _buildVideoItem(index);
+              return _videoListItem(index);
             }),
       ),
     );
   }
 
   /// 视频列表的 Item
-  Widget _buildVideoItem(int index) {
+  Widget _videoListItem(int index) {
     return GestureDetector(
       onTap: () {
         debugPrint(index.toString());
@@ -406,6 +468,34 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     );
   }
 
+  void _onTapVideoItem(int index) {
+    _initializeVideo(index);
+  }
+
+  void _initializeVideo(int index) async {
+    final controller =
+        VideoPlayerController.network(videoInfos[index]["videoUrl"]);
+    final oldController = _videoPlayerController;
+    _videoPlayerController = controller;
+    if (oldController != null) {
+      oldController.removeListener(_onControllerUpdate);
+      oldController.pause();
+    }
+    setState(() {
+      // redraw
+    });
+    controller
+      ..initialize().then((value) {
+        oldController?.dispose();
+        _playingIndex = index;
+        controller.addListener(_onControllerUpdate);
+        controller.play();
+        setState(() {
+          // redraw
+        });
+      });
+  }
+
   void _onControllerUpdate() async {
     if (_disposed) {
       return;
@@ -421,29 +511,6 @@ class _VideoInfoPageState extends State<VideoInfoPage> {
     }
     final playing = controller.value.isPlaying;
     _isPlaying = playing;
-  }
-
-  void _onTapVideoItem(int index) {
-    final controller =
-        VideoPlayerController.network(videoInfos[index]["videoUrl"]);
-    final oldController = _videoPlayerController;
-    _videoPlayerController = controller;
-    if (oldController != null) {
-      oldController.removeListener(_onControllerUpdate);
-      oldController.pause();
-    }
-    setState(() {
-      // redraw
-    });
-    controller
-      ..initialize().then((value) {
-        oldController?.dispose();
-        controller.addListener(_onControllerUpdate);
-        controller.play();
-        setState(() {
-          // redraw
-        });
-      });
   }
 
   @override
