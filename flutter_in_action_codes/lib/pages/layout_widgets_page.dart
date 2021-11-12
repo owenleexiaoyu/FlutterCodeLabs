@@ -7,7 +7,7 @@ import 'package:flutter_app/layout_widgets/flow_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/frame_layout_demo_page.dart';
 import 'package:flutter_app/layout_widgets/layout_builder_demo_page.dart';
 import 'package:flutter_app/layout_widgets/linear_layout_demo_page.dart';
-import 'package:flutter_app/layout_widgets/padding_demo_page.dart';
+import 'package:flutter_app/container_widgets/padding_demo_page.dart';
 
 class LayoutWidgetsPage extends StatelessWidget {
   @override
@@ -54,11 +54,6 @@ class LayoutWidgetsPage extends StatelessWidget {
               HomeItem(title: "LayoutBuilder Demo", onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return LayoutBuilderDemoPage();
-                }));
-              }),
-              HomeItem(title: "Padding Demo", onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return PaddingDemoPage();
                 }));
               }),
             ],
