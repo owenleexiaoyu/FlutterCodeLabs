@@ -13,4 +13,4 @@ Flutter 项目集合，目前包含如下项目：
 | [food_ordering_app_ui](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/food_ordering_app_ui) | UI 仿写：外卖 App               |
 | [video_player_app](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/video_player_app) | UI 仿写：健身 App（含视频播放） |
 | [carousel](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/carousel) | 轮播图小案例 |
-
+| [flutter_spotify_ui](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/flutter_spotify_ui) | UI 仿写：桌面与 Web 端的 Spotify 音乐软件 | 
