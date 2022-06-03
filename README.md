@@ -14,3 +14,4 @@ Flutter 项目集合，目前包含如下项目：
 | [video_player_app](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/video_player_app) | UI 仿写：健身 App（含视频播放） |
 | [carousel](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/carousel) | 轮播图小案例 |
 | [flutter_spotify_ui](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/flutter_spotify_ui) | UI 仿写：桌面与 Web 端的 Spotify 音乐软件 | 
+| [love_animation](https://github.com/owenleexiaoyu/FlutterCodeLabs/tree/main/love_animation) | UI 仿写：实现一个爱心小动画 |
