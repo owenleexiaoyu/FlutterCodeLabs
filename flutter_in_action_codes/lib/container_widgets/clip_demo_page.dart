@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/container_widgets/custom_rect_clipper.dart';
 import 'package:flutter_app/container_widgets/round_avatar_widget.dart';
+import 'package:flutter_app/container_widgets/start_clipper.dart';
 import 'package:flutter_app/custom_widgets/desc_item.dart';
 
 class ClipDemoPage extends StatelessWidget {
@@ -54,13 +55,18 @@ class ClipDemoPage extends StatelessWidget {
                   Text("Hello", style: TextStyle(color: Colors.blueAccent),),
                 ],
               ),
-              DescItem("自定义 Clipper"),
+              DescItem("CustomClipper<Rect>"),
               Container(
                 color: Colors.blueAccent,
                 child: ClipRect(
                   clipper: CustomRectClipper(),
                     child: avatar
                   ),
+              ),
+              DescItem("ClipPath, 子组件裁剪成五角星"),
+              ClipPath(
+                  clipper: StarClipper(),
+                  child: avatar
               ),
               DescItem("自定义带边框圆形头像组件"),
               RoundAvatarWidget(size: 60, child: avatar, borderWidth: 4, borderColor: Colors.orange,),
