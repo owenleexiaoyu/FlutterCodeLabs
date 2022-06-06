@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/container_widgets/clip_demo_page.dart';
 import 'package:flutter_app/container_widgets/container_demo_page.dart';
 import 'package:flutter_app/container_widgets/decoratedbox_demo_page.dart';
+import 'package:flutter_app/container_widgets/scaffold_demo_page.dart';
 import 'package:flutter_app/container_widgets/transform_demo_page.dart';
 import 'package:flutter_app/custom_widgets/home_item.dart';
 import 'package:flutter_app/container_widgets/padding_demo_page.dart';
@@ -41,6 +42,11 @@ class ContainerWidgetsPage extends StatelessWidget {
               HomeItem(title: "Clip Demo", onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return ClipDemoPage();
+                }));
+              }),
+              HomeItem(title: "Scaffold Demo", onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ScaffoldDemoPage();
                 }));
               }),
             ],
