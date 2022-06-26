@@ -15,7 +15,9 @@ class NotchedBottomBarDemoPage extends StatelessWidget {
         child: Row(
           children: [
             IconButton(onPressed: (){}, icon: Icon(Icons.home)),
+            IconButton(onPressed: (){}, icon: Icon(Icons.favorite)),
             SizedBox(),
+            IconButton(onPressed: (){}, icon: Icon(Icons.notifications)),
             IconButton(onPressed: (){}, icon: Icon(Icons.person)),
           ],
           mainAxisAlignment: MainAxisAlignment.spaceAround,
