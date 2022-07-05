@@ -3,7 +3,9 @@
 ## 来源
 
 [【Flutter UI】音乐播放器UI —— music player UI](https://www.bilibili.com/video/BV1VT41137JJ?spm_id_from=333.999.0.0&vd_source=581e0a7f58fafc192abc773bb2e5e1ed)
-> source：https://www.youtube.com/watch?v=mf2CoM7btfQ 
+
+> source：https://www.youtube.com/watch?v=mf2CoM7btfQ
+
 > code ： https://github.com/mitchkoko/musicplayerUI
 
 在 Bilibi 上看到一个浮雕效果很赞的播放器 UI，就来复刻一下，实现效果如下：
